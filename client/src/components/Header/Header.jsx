@@ -33,7 +33,7 @@ const Header = () => {
       id: 1,
       link: (
         <>
-          <div className="flex items-center justify-center gap-2 text-2xl text-[#030360] ">
+          <div className="flex items-center justify-center gap-2 text-2xl text-white md:text-[#030360] ">
             <FaCircleUser className="text-4xl" />
             <p>{loginUser}</p>
           </div>

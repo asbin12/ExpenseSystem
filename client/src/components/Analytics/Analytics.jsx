@@ -57,7 +57,7 @@ const Analytics = ({ transactionData, isPending }) => {
       ) : (
         <>
           <Container>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col lg:flex-row items-center gap-3">
               <div className="flex items-center justify-start gap-7 border border-blue-300 bg-transparent z-10 w-fit p-4 rounded-md">
                 <div>
                   <Statistic
@@ -149,7 +149,7 @@ const Analytics = ({ transactionData, isPending }) => {
               </div>
             </div>
             <div className="flex justify-center items-center pt-4">
-              <div>
+              <div className="w-[400px] md:w-[800px] flex justify-center">
                 <BarChart
                   width={800}
                   height={400}

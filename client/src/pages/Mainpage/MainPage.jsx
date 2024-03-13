@@ -65,11 +65,11 @@ const MainPage = () => {
       <Container>
         <div className="flex flex-col justify-center gap-5 items-center pt-20 relative overflow-hidden">
           <div className="flex  items-center justify-between py-4 px-1 border border-white bg-white overflow-hidden w-full">
-            <div className="center__items flex-col">
+            <div className="center__items !hidden  md:!flex md:!flex-col ">
               <span className="text-base font-medium">Select Time</span>
               <SelectInput value={optionValue} options={optionOption} />
             </div>
-            <div className="center__items flex-col">
+            <div className="center__items !hidden md:!flex md:!flex-col">
               <span className="text-base font-medium">Select Type</span>
               <SelectInput
                 value={incomeExpenseOption}
