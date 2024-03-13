@@ -10,6 +10,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { poster } from "../../components/ImagePath/Img";
 import Buttons from "../../components/Button/Button";
 import { message } from "antd";
+import queryClient from "../../Query/Query";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -24,14 +25,16 @@ const Login = () => {
       return loginData(data.email, data.password);
     },
     onSuccess: (data) => {
+      message.success("User Login successfully");
+      queryClient.invalidateQueries("TransactionDetails");
+
       localStorage.setItem(
         "user",
         JSON.stringify({ ...data.user, password: "" })
       );
-      window.location.reload();
-      // queryClient.invalidateQueries("TransactionDetails");
-      message.success("User Login successfully");
-
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
       navigate("/");
     },
     onError: (error) => {

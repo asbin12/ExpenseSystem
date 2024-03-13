@@ -16,8 +16,11 @@ const Header = () => {
     localStorage.removeItem("user");
     message.success("Logout Successfully");
     navigate("/login");
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -30,7 +33,7 @@ const Header = () => {
       id: 1,
       link: (
         <>
-          <div className="flex items-center justify-center gap-2 text-2xl text-white">
+          <div className="flex items-center justify-center gap-2 text-2xl text-[#030360] ">
             <FaCircleUser className="text-4xl" />
             <p>{loginUser}</p>
           </div>
@@ -52,7 +55,7 @@ const Header = () => {
   ];
   return (
     <>
-      <div className="flex justify-between items-center w-full bg-[#9f9a9a]  text-white fixed px-4 z-20">
+      <div className="flex justify-between items-center w-full bg-cyan-100 border-b-2 border-gray-300  pb-3  text-white fixed px-4 z-50">
         <figure>
           <img
             src={logo}

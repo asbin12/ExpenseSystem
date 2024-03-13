@@ -1,128 +1,259 @@
 import Container from "../Container/Container";
-import Chart from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Statistic, Progress, Skeleton } from "antd";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Line,
+  LineChart,
+} from "recharts";
+
 const Analytics = ({ transactionData, isPending }) => {
-  console.log(transactionData, "transactionData");
-  const incomeFilter = transactionData
-    .filter((item) => item.type === "Income")
-    .reduce((acc, transaction) => acc + transaction.amount, 0);
+  const totalIncome = transactionData
+    .filter((transaction) => transaction.type === "Income")
+    .reduce((total, transaction) => total + transaction.amount, 0);
 
-  const expenseFilter = transactionData
-    .filter((item) => item.type === "Expense")
-    .reduce((acc, transaction) => acc + transaction.amount, 0);
+  const totalExpense = transactionData
+    .filter((transaction) => transaction.type === "Expense")
+    .reduce((total, transaction) => total + transaction.amount, 0);
 
-  console.log("incomeFilter", incomeFilter);
-  console.log("expenseFilter", expenseFilter);
+  const pieChartData = [
+    { name: "Income", value: totalIncome },
+    { name: "Expense", value: totalExpense },
+  ];
 
-  // const incomeFilter = allTransaction
-  //   .filter((transaction) => transaction.type === "rentCollected")
-  //   .reduce((acc, transaction) => acc + transaction.amount, 0);
-  const IncomeFilterData = transactionData
-    .filter((item) => item.type === "Expense")
-    .map((item) => {
-      return item.amount;
-    });
-  const expenseFilterData = transactionData
-    .filter((item) => item.type === "Expense")
-    .map((item) => {
-      return item.amount;
-    });
+  const combinedChartData = transactionData.map((transaction) => ({
+    date: new Date(transaction.date).toLocaleDateString(),
+    amount: transaction.amount,
+    type: transaction.type,
+  }));
+
+  const incomeData = combinedChartData.filter((item) => item.type === "Income");
+  console.log(incomeData);
+  const expenseData = combinedChartData.filter(
+    (item) => item.type === "Expense"
+  );
+  const total = totalIncome + totalExpense;
+  const incomePercentage =
+    total > 0 ? (totalIncome / total) * 100 : totalIncome > 0 ? 100 : 0;
+  const expensePercentage =
+    total > 0 ? (totalExpense / total) * 100 : totalExpense > 0 ? 100 : 0;
+
+  const mergedData = [...incomeData, ...expenseData].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+  const uniqueDates = [...new Set(combinedChartData.map((item) => item.date))];
 
   return (
     <>
-      <div>
-        <Container>
-          <div className="flex gap-4">
-            <div className="border border-gray-200 bg-blue-100 text-black w-fit rounded-md flex flex-col font-primary text-base font-medium">
-              <span className="border-b rounded-t-md border-white w-full bg-white text-center  text-black">
-                Income:
-              </span>
-              <span className=" px-8  py-6"> $ {incomeFilter}</span>
-            </div>
-            <div className="border border-gray-200 bg-blue-100 text-black w-fit rounded-md flex flex-col font-primary text-base font-medium">
-              <span className="border-b rounded-t-md border-white w-full bg-white text-center  text-black">
-                Expense:
-              </span>
-              <span className=" px-8  py-6"> $ {expenseFilter}</span>
-            </div>
-          </div>
+      {isPending ? (
+        <Skeleton />
+      ) : (
+        <>
+          <Container>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-start gap-7 border border-blue-300 bg-transparent z-10 w-fit p-4 rounded-md">
+                <div>
+                  <Statistic
+                    title="Total Income"
+                    value={`${totalIncome}` || "$ 0"}
+                    className="pb-4 font-base font-medium font-primary"
+                  />
+                  <Progress
+                    percent={incomePercentage.toFixed(2) || "0%"}
+                    type="circle"
+                    strokeColor="#82ca9d"
+                  />
+                </div>
+                <div>
+                  <Statistic
+                    title="Total Expense"
+                    value={` ${totalExpense}` || "$ 0"}
+                    className="pb-4 font-base font-medium font-primary"
+                  />
+                  <Progress
+                    percent={expensePercentage.toFixed(2) || "0%"}
+                    type="circle"
+                    strokeColor="#FF6347"
+                  />
+                </div>
+              </div>
 
-          <div className="flex gap-10 ">
-            <div className="w-[300px] h-[300px] pt-[100px]">
-              <Bar
-                style={{ height: "100%" }}
-                data={{
-                  labels: ["Income Expense"],
-                  datasets: [
-                    {
-                      label: "Income",
-                      data: [incomeFilter],
-                      backgroundColor: "rgba(75,192,192,0.2)",
-                      borderColor: "rgba(75,192,192,1)",
-                      borderWidth: 1,
-                    },
-                    {
-                      label: "Expense",
-                      data: [expenseFilter],
-                      backgroundColor: "rgba(255,99,132,0.2)",
-                      borderColor: "rgba(255,99,132,1)",
-                      borderWidth: 1,
-                    },
-                  ],
-                }}
-              />
-            </div>
-            <div className="w-[300px] h-[300px] ]">
-              <Line
-                style={{ height: "100%" }}
-                data={{
-                  labels: ["Income Expense"],
-                  datasets: [
-                    {
-                      label: "Income",
-                      data: [incomeFilter],
-                      backgroundColor: "rgba(75,192,192,0.2)",
-                      borderColor: "rgba(75,192,192,1)",
-                      borderWidth: 1,
-                    },
-                    {
-                      label: "Expense",
-                      data: [expenseFilter],
-                      backgroundColor: "rgba(255,99,132,0.2)",
-                      borderColor: "rgba(255,99,132,1)",
-                      borderWidth: 1,
-                    },
-                  ],
-                }}
-              />
-            </div>
-            <div className="w-[300px] h-[400px] pt-5">
-              <Doughnut
-                data={{
-                  labels: ["Income Expense"],
-                  datasets: [
-                    {
-                      label: "Income",
-                      data: [incomeFilter],
-                      backgroundColor: "green",
-                      borderColor: "rgba(75,192,192,1)",
-                      borderWidth: 1,
-                    },
-                    {
-                      label: "Expense",
-                      data: [expenseFilter],
-                      backgroundColor: "red",
+              <div className="flex items-center justify-center">
+                <PieChart width={500} height={300}>
+                  {/* Outer Pie representing the donut ring */}
+                  <Pie
+                    data={[{ value: 1 }]}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="transparent"
+                    label={false}
+                  />
+                  {/* Inner Pie representing the filled portion */}
+                  <Pie
+                    data={pieChartData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    innerRadius={40} // Set inner radius for donut shape
+                    fill="#8884d8"
+                    label
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index === 0 ? "#82ca9d" : "#FF6347"}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </div>
 
-                      borderColor: "rgba(255,99,132,1)",
-                      borderWidth: 1,
-                    },
-                  ],
-                }}
-              />
+              <div>
+                <LineChart
+                  width={500}
+                  height={300}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" ticks={uniqueDates} />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    data={mergedData.filter((item) => item.type === "Income")} // Filter income data
+                    dataKey="amount"
+                    stroke="#82ca9d"
+                    name="Income"
+                  />
+                  <Line
+                    type="monotone"
+                    data={mergedData.filter((item) => item.type === "Expense")} // Filter expense data
+                    dataKey="amount"
+                    stroke="#FF6347"
+                    name="Expense"
+                  />
+                </LineChart>
+              </div>
             </div>
-          </div>
-        </Container>
-      </div>
+            <div className="flex justify-center items-center pt-4">
+              <div>
+                <BarChart
+                  width={800}
+                  height={400}
+                  data={combinedChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" ticks={uniqueDates} />
+                  <YAxis />
+                  <Tooltip
+                    content={({ payload, label, active }) => {
+                      if (active && payload && payload.length) {
+                        const item = payload[0];
+                        const type =
+                          item.payload.type === "Income" ? "Income" : "Expense";
+                        return (
+                          <div
+                            style={{
+                              background: "#fff",
+                              border: "1px solid #ccc",
+                              padding: "10px",
+                            }}
+                          >
+                            <p>Date: {label}</p>
+                            <p>
+                              {type}: {item.value}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="amount" barSize={20} name="Income and Expenses">
+                    {combinedChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.type === "Income" ? "#82ca9d" : "#FF6347"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </div>
+              <div></div>
+            </div>
+
+            {/* <Row gutter={[16, 16]}>
+              <Col span={12}></Col>
+              <Col span={12}>
+                <BarChart
+                  width={500}
+                  height={400}
+                  data={combinedChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" ticks={uniqueDates} />
+                  <YAxis />
+                  <Tooltip
+                    content={({ payload, label, active }) => {
+                      if (active && payload && payload.length) {
+                        const item = payload[0];
+                        const type =
+                          item.payload.type === "Income" ? "Income" : "Expense";
+                        return (
+                          <div
+                            style={{
+                              background: "#fff",
+                              border: "1px solid #ccc",
+                              padding: "10px",
+                            }}
+                          >
+                            <p>Date: {label}</p>
+                            <p>
+                              {type}: {item.value}
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="amount" barSize={20} name="Income and Expenses">
+                    {combinedChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.type === "Income" ? "#82ca9d" : "#FF6347"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+              
+              </Col>
+            </Row> */}
+          </Container>
+        </>
+      )}
     </>
   );
 };

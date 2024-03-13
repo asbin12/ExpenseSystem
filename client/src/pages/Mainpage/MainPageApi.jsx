@@ -32,7 +32,6 @@ export const getTransactionDetails = async () => {
       userid: user._id,
     },
   });
-  console.log("resp", response.data);
   return response.data;
 };
 

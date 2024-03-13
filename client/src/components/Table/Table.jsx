@@ -10,7 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteExpenseDetails } from "../../pages/Mainpage/MainPageApi";
 import queryClient from "../../Query/Query";
 
-const TableComponents = ({ transactionData, isPending }) => {
+const TableComponents = ({ transactionData, isPending, refetch }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -152,19 +152,18 @@ const TableComponents = ({ transactionData, isPending }) => {
     },
   ];
 
-  console.log("transactionData", transactionData);
-
   const ExpenseDelete = useMutation({
     mutationFn: (record) => {
       return deleteExpenseDetails(record);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("TransactionDetails");
       message.success("Details deleted successfully");
       const remainingDataCount = transactionData.length - 1;
       if (remainingDataCount % 5 === 0) {
-        // Trigger a reload
-        window.location.reload();
+        queryClient.invalidateQueries("TransactionDetails");
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
       }
     },
     onError: (error) => {
@@ -181,9 +180,10 @@ const TableComponents = ({ transactionData, isPending }) => {
     setShowModal(true);
     setEditable(editRecord);
   };
-  useEffect(() => {
-    queryClient.invalidateQueries("TransactionDetails");
-  }, [currentPage]);
+  // useEffect(() => {
+  //   queryClient.invalidateQueries("TransactionDetails");
+  //   refetch();
+  // }, [currentPage]);
   // history.replace(window.location.pathname);
 
   return (
@@ -196,6 +196,7 @@ const TableComponents = ({ transactionData, isPending }) => {
             key={transactionData.length}
             columns={columns}
             dataSource={currentItems}
+            responsive={true}
             // loading={isPending}
             pagination={{
               current: currentPage,

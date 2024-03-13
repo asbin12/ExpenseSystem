@@ -1,9 +1,4 @@
-const SelectInput = ({
-  options,
-  value,
-  className,
-  onSelectChange,
-}) => {
+const SelectInput = ({ options, value, className, onSelectChange }) => {
   const lowercaseValue = value.map((value) => {
     return typeof value === "string" ? value.toLowerCase() : value;
   });
@@ -14,8 +9,7 @@ const SelectInput = ({
   };
   return (
     <select
-      
-      className={`px-4 py-2 outline-none border-none rounded-md bg-blue-500 text-white ${className}`}
+      className={`px-4 py-2 outline-none border-none rounded-md bg-blue-500 text-white cursor-pointer ${className}`}
       onChange={handleSelectChange}
     >
       {options.map((option, i) => (

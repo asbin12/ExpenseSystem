@@ -9,6 +9,7 @@ import { useAppContext } from "../../Context/Context";
 import { useQuery } from "@tanstack/react-query";
 import { getTransactionDetails } from "./MainPageApi";
 import Analytics from "../../components/Analytics/Analytics";
+import { message } from "antd";
 
 const MainPage = () => {
   const { setShowModal, setEditable, viewData, setViewData } = useAppContext();
@@ -32,8 +33,6 @@ const MainPage = () => {
     return option.value;
   });
 
-  // console.log("optionValue", optionValue);
-
   const incomeExpenseOption = ["All", "Income", "Expense"];
 
   const {
@@ -44,24 +43,28 @@ const MainPage = () => {
   } = useQuery({
     queryKey: ["TransactionDetails"],
     queryFn: getTransactionDetails,
-    // staleTime: 60000,
-    enable: false,
- 
+    staleTime: "infinity",
+    // enable: false,
   });
 
   const showAnalytics = () => {
-    setViewData("analytics");
+    if (transactionData && transactionData.length > 0) {
+      setViewData("analytics");
+    } else {
+      message.error(
+        "No transaction data available. Please enter a transaction."
+      );
+    }
   };
   const showTable = () => {
     setViewData("table");
   };
 
-  console.log("transactionData", transactionData);
   return (
     <>
       <Container>
-        <div className="flex flex-col justify-center gap-5 items-center pt-20">
-          <div className="flex  items-center justify-between py-4 px-1 border border-black w-full">
+        <div className="flex flex-col justify-center gap-5 items-center pt-20 relative overflow-hidden">
+          <div className="flex  items-center justify-between py-4 px-1 border border-white bg-white overflow-hidden w-full">
             <div className="center__items flex-col">
               <span className="text-base font-medium">Select Time</span>
               <SelectInput value={optionValue} options={optionOption} />
@@ -77,14 +80,14 @@ const MainPage = () => {
               <Buttons
                 icon={<GoListUnordered className={`text-2xl font-bold `} />}
                 className={`rounded-none !text-white !py-2 rounded-l-lg ${
-                  viewData === "table" ? " bg-blue-300" : "bg-blue-500"
+                  viewData === "table" ? "bg-blue-800" : "bg-blue-300"
                 }`}
                 onClick={showTable}
               />
               <Buttons
                 icon={<AiOutlineAreaChart className={`text-2xl font-bold`} />}
                 className={`rounded-none !text-white !py-2 rounded-r-lg ${
-                  viewData === "analytics" ? " bg-blue-300" : "bg-blue-500"
+                  viewData === "analytics" ? "bg-blue-800" : "bg-blue-300"
                 }`}
                 onClick={showAnalytics}
               />
@@ -105,6 +108,7 @@ const MainPage = () => {
               <TableComponents
                 transactionData={transactionData}
                 isPending={isPending}
+                refetch={refetch}
               />
             </div>
           ) : (
