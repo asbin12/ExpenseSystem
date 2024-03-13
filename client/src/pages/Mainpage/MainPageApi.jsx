@@ -3,7 +3,6 @@ import instance from "../../Axios/Instance";
 const user = JSON.parse(localStorage.getItem("user"));
 
 export const createExpenseDetails = async (data) => {
-  console.log("data from api", data);
   const userData = await instance.post("/transaction/add-transaction", {
     userid: user._id,
     amount: data.amount,

@@ -36,7 +36,6 @@ const Analytics = ({ transactionData, isPending }) => {
   }));
 
   const incomeData = combinedChartData.filter((item) => item.type === "Income");
-  console.log(incomeData);
   const expenseData = combinedChartData.filter(
     (item) => item.type === "Expense"
   );

@@ -35,7 +35,6 @@ const ModalComponents = () => {
   });
   const EditExpense = useMutation({
     mutationFn: (transactionEdit) => {
-      console.log("transactionEdit.id", transactionEdit.id);
       return editExpenseDetails(transactionEdit.data, transactionEdit.id);
     },
     onSuccess: () => {

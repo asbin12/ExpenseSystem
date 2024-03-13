@@ -157,10 +157,10 @@ const TableComponents = ({ transactionData, isPending, refetch }) => {
       return deleteExpenseDetails(record);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries("TransactionDetails");
       message.success("Details deleted successfully");
       const remainingDataCount = transactionData.length - 1;
       if (remainingDataCount % 5 === 0) {
-        queryClient.invalidateQueries("TransactionDetails");
         setTimeout(() => {
           window.location.reload();
         }, 200);
