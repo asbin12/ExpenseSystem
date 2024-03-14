@@ -189,9 +189,9 @@ const TableComponents = ({ transactionData, isPending, refetch }) => {
   return (
     <>
       {isPending ? (
-        <Skeleton />
+        <Skeleton active />
       ) : (
-        <div className="overflow-scroll md:overflow-hidden">
+        <div className="overflow-scroll lg:overflow-hidden">
           <Table
             key={transactionData.length}
             columns={columns}

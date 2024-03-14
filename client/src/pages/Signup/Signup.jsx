@@ -42,13 +42,13 @@ const Signup = () => {
     <>
       <section>
         <Container>
-          <div className="flex flex-row-reverse items-center justify-center  p-4">
+          <div className="flex items-center justify-center  p-4">
             <div className="bg-white z-10 flex h-full w-full rounded-xl">
-              <figure className="w-full ">
+              <figure className=" !hidden sm:!flex pr-2 sm:pt-20 lg:pt-0">
                 <img
                   src={poster}
                   alt=""
-                  className=" object-cover object-center w-full h-full rounded-l-xl"
+                  className="lg:w-full sm:w-full sm:object-cover lg:object-cover  w-full h-full"
                 />
               </figure>
 
@@ -59,7 +59,7 @@ const Signup = () => {
                     <h1 className="headings text-center">Get Started</h1>
                     <form
                       onSubmit={handleSubmit(submittedData)}
-                      className="flex flex-col"
+                      className="flex flex-col lg:w-full sm:2/4 w-full"
                     >
                       <div>
                         <Label name="Name" sup={"*"} />

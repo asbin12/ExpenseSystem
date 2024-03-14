@@ -57,7 +57,7 @@ const Analytics = ({ transactionData, isPending }) => {
       ) : (
         <>
           <Container>
-            <div className="flex flex-col lg:flex-row items-center gap-3">
+            <div className="flex flex-col xl:flex-row items-center gap-3 overflow-scroll sm:overflow-hidden">
               <div className="flex items-center justify-start gap-7 border border-blue-300 bg-transparent z-10 w-fit p-4 rounded-md">
                 <div>
                   <Statistic
@@ -90,6 +90,7 @@ const Analytics = ({ transactionData, isPending }) => {
                   {/* Outer Pie representing the donut ring */}
                   <Pie
                     data={[{ value: 1 }]}
+                    dataKey="value"
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
@@ -148,8 +149,8 @@ const Analytics = ({ transactionData, isPending }) => {
                 </LineChart>
               </div>
             </div>
-            <div className="flex justify-center items-center pt-4">
-              <div className="w-[400px] md:w-[800px] flex justify-center">
+            <div className="flex justify-center items-center overflow-scroll lg:overflow-hidden p-4">
+              <div className="">
                 <BarChart
                   width={800}
                   height={400}
@@ -162,9 +163,12 @@ const Analytics = ({ transactionData, isPending }) => {
                   <Tooltip
                     content={({ payload, label, active }) => {
                       if (active && payload && payload.length) {
-                        const item = payload[0];
-                        const type =
-                          item.payload.type === "Income" ? "Income" : "Expense";
+                        const items = payload.filter(
+                          (item) => item.payload.type === "Income"
+                        );
+                        const expenses = payload.filter(
+                          (item) => item.payload.type === "Expense"
+                        );
                         return (
                           <div
                             style={{
@@ -174,9 +178,16 @@ const Analytics = ({ transactionData, isPending }) => {
                             }}
                           >
                             <p>Date: {label}</p>
-                            <p>
-                              {type}: {item.value}
-                            </p>
+                            {items.map((item, index) => (
+                              <p key={index}>
+                                Income: {item.value}
+                                {expenses[index] && (
+                                  <span>
+                                    , Expense: {expenses[index].value}
+                                  </span>
+                                )}
+                              </p>
+                            ))}
                           </div>
                         );
                       }
@@ -194,62 +205,7 @@ const Analytics = ({ transactionData, isPending }) => {
                   </Bar>
                 </BarChart>
               </div>
-              <div></div>
             </div>
-
-            {/* <Row gutter={[16, 16]}>
-              <Col span={12}></Col>
-              <Col span={12}>
-                <BarChart
-                  width={500}
-                  height={400}
-                  data={combinedChartData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" ticks={uniqueDates} />
-                  <YAxis />
-                  <Tooltip
-                    content={({ payload, label, active }) => {
-                      if (active && payload && payload.length) {
-                        const item = payload[0];
-                        const type =
-                          item.payload.type === "Income" ? "Income" : "Expense";
-                        return (
-                          <div
-                            style={{
-                              background: "#fff",
-                              border: "1px solid #ccc",
-                              padding: "10px",
-                            }}
-                          >
-                            <p>Date: {label}</p>
-                            <p>
-                              {type}: {item.value}
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Legend />
-                  <Bar dataKey="amount" barSize={20} name="Income and Expenses">
-                    {combinedChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={entry.type === "Income" ? "#82ca9d" : "#FF6347"}
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-              
-              </Col>
-            </Row> */}
           </Container>
         </>
       )}

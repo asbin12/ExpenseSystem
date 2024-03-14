@@ -60,24 +60,24 @@ const Login = () => {
       <section>
         <Container>
           <div className="flex  items-center justify-center p-4">
-            <div className="bg-white z-10 flex h-full w-full rounded-xl">
-              <figure className="w-full ">
+            <div className="bg-white z-10  h-full w-full rounded-xl flex ">
+              <figure className=" !hidden sm:!flex  align-center sm:pt-20 lg:pt-0">
                 <img
                   src={poster}
                   alt=""
-                  className=" object-cover object-center w-full h-full rounded-l-xl"
+                  className="lg:w-full sm:w-full sm:object-cover lg:object-cover object-center w-full h-full"
                 />
               </figure>
 
-              <div className=" w-full flex items-center justify-center">
-                <div className=" p-6 rounded-xl flex flex-col gap-2 pl-3">
+              <div className=" w-full  flex items-center justify-center  ">
+                <div className=" p-6 rounded-xl flex  flex-col gap-2 pl-3">
                   <div className="website-name">Expense Management System</div>
                   <div className="py-5">
                     <h1 className="headings text-center">Login</h1>
 
                     <form
                       onSubmit={handleSubmit(submittedData)}
-                      className="flex flex-col gap-3"
+                      className="flex flex-col gap-3 lg:w-full sm:2/4 w-full"
                     >
                       <div>
                         <Label name="Email" sup={"*"} />
