@@ -12,7 +12,8 @@ import Analytics from "../../components/Analytics/Analytics";
 import { message } from "antd";
 
 const MainPage = () => {
-  const { setShowModal, setEditable, viewData, setViewData } = useAppContext();
+  const { setShowModal, setEditable, viewData, setViewData, currentPage } =
+    useAppContext();
 
   const dateOptions = [
     { value: 7, option: "Last Week" },
@@ -41,8 +42,9 @@ const MainPage = () => {
     data: transactionData,
     refetch,
   } = useQuery({
-    queryKey: ["TransactionDetails"],
-    queryFn: getTransactionDetails,
+    queryKey: ["TransactionDetails", currentPage],
+    queryFn: () => getTransactionDetails(currentPage),
+    keepPreviousData: true,
     staleTime: "infinity",
     // enable: false,
   });
@@ -119,6 +121,7 @@ const MainPage = () => {
               />
             </div>
           )}
+          {/* <Table2 /> */}
           <ModalComponents />
         </div>
       </Container>

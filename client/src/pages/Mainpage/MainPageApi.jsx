@@ -25,10 +25,11 @@ export const createExpenseDetails = async (data) => {
 //   return resp;
 // };
 
-export const getTransactionDetails = async () => {
+export const getTransactionDetails = async (page) => {
   const response = await instance.get("/transaction/get-transaction", {
     params: {
       userid: user._id,
+      page: +page,
     },
   });
   return response.data;

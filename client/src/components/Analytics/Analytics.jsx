@@ -183,7 +183,7 @@ const Analytics = ({ transactionData, isPending }) => {
                                 Income: {item.value}
                                 {expenses[index] && (
                                   <span>
-                                    , Expense: {expenses[index].value}
+                                     Expense: {expenses[index].value}
                                   </span>
                                 )}
                               </p>

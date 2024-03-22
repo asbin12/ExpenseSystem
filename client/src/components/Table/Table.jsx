@@ -33,7 +33,6 @@ const TableComponents = ({ transactionData, isPending, refetch }) => {
   };
 
   const handlePageChange = (page) => {
-    queryClient.invalidateQueries("TransactionDetails");
     setCurrentPage(page);
   };
 
@@ -157,13 +156,17 @@ const TableComponents = ({ transactionData, isPending, refetch }) => {
       return deleteExpenseDetails(record);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("TransactionDetails");
       message.success("Details deleted successfully");
-      const remainingDataCount = transactionData.length - 1;
-      if (remainingDataCount % 5 === 0) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      queryClient.invalidateQueries("TransactionDetails");
+
+      // Calculate the total number of pages after deletion
+      const totalPagesAfterDeletion = Math.ceil(
+        (transactionData.length - 1) / itemsPerPage
+      );
+
+      // Update the current page if necessary
+      if (currentPage > totalPagesAfterDeletion) {
+        setCurrentPage(totalPagesAfterDeletion);
       }
     },
     onError: (error) => {
